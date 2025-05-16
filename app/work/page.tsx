@@ -1,17 +1,44 @@
+"use client";
 // Notes: Página principal del área de Work para mostrar todos los case studies.
 // Goal: Listar todos los proyectos con un layout similar al de la Home.
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ProjectCard from "@/components/ui/project-card";
-import { getAllCaseStudies } from "@/lib/mdx";
 import type { CaseStudyFrontmatter } from "@/lib/mdx";
 
-export default async function WorkPage() {
-  // Obtener todos los case studies
-  const caseStudies = await getAllCaseStudies();
+export default function WorkPage() {
+  // Estado para almacenar los case studies
+  const [caseStudies, setCaseStudies] = useState<
+    (CaseStudyFrontmatter & { slug: string })[]
+  >([]);
+  // Estado para el proyecto sobre el que pasa el mouse
+  const [hoveredProject, setHoveredProject] = useState<
+    (CaseStudyFrontmatter & { slug: string }) | null
+  >(null);
+  // Estado de carga
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Cargar los case studies cuando el componente se monta
+  useEffect(() => {
+    const loadCaseStudies = async () => {
+      try {
+        setIsLoading(true);
+        // Fetch case studies
+        const response = await fetch("/api/case-studies");
+        const data = await response.json();
+        setCaseStudies(data.caseStudies || []);
+      } catch (error) {
+        console.error("Error cargando case studies:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadCaseStudies();
+  }, []);
 
   return (
     <div className="grid grid-cols-[1fr_auto_1px_auto_1fr] grid-rows-[max-content_1px_max-content_1px_auto_1px] min-h-dvh bg-accent">
@@ -45,11 +72,19 @@ export default async function WorkPage() {
         <div className="px-5 space-y-8">
           <h2 className="text-sm text-muted-foreground">All projects</h2>
           <div className="flex flex-col gap-2 -mx-2">
-            {caseStudies.map(
-              (
-                project: CaseStudyFrontmatter & { slug: string },
-                index: number
-              ) => (
+            {isLoading ? (
+              // Placeholder de carga
+              <div className="py-6 text-muted-foreground">
+                Loading projects...
+              </div>
+            ) : caseStudies.length === 0 ? (
+              // Mensaje cuando no hay proyectos
+              <div className="py-6 text-muted-foreground">
+                No projects found.
+              </div>
+            ) : (
+              // Renderizar los proyectos
+              caseStudies.map((project, index) => (
                 <ProjectCard
                   key={project.slug}
                   id={index + 1}
@@ -57,11 +92,14 @@ export default async function WorkPage() {
                   year={project.year}
                   company={project.company}
                   image={project.mainImage}
+                  onHover={() => setHoveredProject(project)}
+                  onLeave={() => setHoveredProject(null)}
                   variant="row"
+                  showImage={hoveredProject?.slug === project.slug}
                   headingLevel="h3"
                   href={`/work/${project.slug}`}
                 />
-              )
+              ))
             )}
           </div>
         </div>
@@ -69,7 +107,19 @@ export default async function WorkPage() {
 
       {/* Espacio para imagen (en caso de querer mostrar alguna) */}
       <div className="col-start-4 min-w-xl row-start-1 row-span-5 flex justify-center items-center gap-2 rounded px-6 py-16 relative">
-        {/* Placeholder para posible contenido */}
+        {/* Image that appears when hovering a ProjectCard */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          {hoveredProject && (
+            <Image
+              src={hoveredProject.mainImage}
+              alt={`${hoveredProject.title} preview`}
+              width={800}
+              height={800}
+              className="max-w-[80%] max-h-[80%] object-contain opacity-0 transition-opacity duration-300 ease-in-out"
+              style={{ opacity: hoveredProject ? 1 : 0 }}
+            />
+          )}
+        </div>
       </div>
 
       {/* Separadores horizontales */}

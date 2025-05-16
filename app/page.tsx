@@ -24,17 +24,22 @@ export default function Home() {
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
   // Estado para el proyecto sobre el que pasa el mouse
   const [hoveredProject, setHoveredProject] = useState<CaseStudy | null>(null);
+  // Estado de carga
+  const [isLoading, setIsLoading] = useState(true);
 
   // Cargar los case studies cuando el componente se monta
   useEffect(() => {
     const loadCaseStudies = async () => {
       try {
+        setIsLoading(true);
         // Fetch case studies
         const response = await fetch("/api/case-studies");
         const data = await response.json();
         setCaseStudies(data.caseStudies || []);
       } catch (error) {
         console.error("Error cargando case studies:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -50,22 +55,35 @@ export default function Home() {
             <div className="px-5 space-y-8">
               <h2 className="text-sm text-muted-foreground">Latest projects</h2>
               <div className="flex flex-col gap-2 -mx-2">
-                {caseStudies.map((project, index) => (
-                  <ProjectCard
-                    key={project.slug}
-                    id={index + 1}
-                    title={project.title}
-                    year={project.year}
-                    company={project.company}
-                    image={project.mainImage}
-                    onHover={() => setHoveredProject(project)}
-                    onLeave={() => setHoveredProject(null)}
-                    variant="row"
-                    showImage={hoveredProject?.slug === project.slug}
-                    headingLevel="h3"
-                    href={`/work/${project.slug}`}
-                  />
-                ))}
+                {isLoading ? (
+                  // Placeholder de carga
+                  <div className="py-12 text-muted-foreground">
+                    Loading projects...
+                  </div>
+                ) : caseStudies.length === 0 ? (
+                  // Mensaje cuando no hay proyectos
+                  <div className="py-6 text-muted-foreground">
+                    No projects found.
+                  </div>
+                ) : (
+                  // Renderizar los projects
+                  caseStudies.map((project, index) => (
+                    <ProjectCard
+                      key={project.slug}
+                      id={index + 1}
+                      title={project.title}
+                      year={project.year}
+                      company={project.company}
+                      image={project.mainImage}
+                      onHover={() => setHoveredProject(project)}
+                      onLeave={() => setHoveredProject(null)}
+                      variant="row"
+                      showImage={hoveredProject?.slug === project.slug}
+                      headingLevel="h3"
+                      href={`/work/${project.slug}`}
+                    />
+                  ))
+                )}
               </div>
             </div>
           </div>
