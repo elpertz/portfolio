@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pertz Portfolio
+
+Personal portfolio built with **Next.js 15 (App Router)**, **Tailwind CSS v4**, **Framer Motion**, **MDX**, and **shadcn/ui**.
+
+## Project Overview
+
+Showcase detailed work case-studies, display playful experiments in a Playground grid, and offer a simple contact path (via Home tab).
 
 ## Getting Started
 
-First, run the development server:
+1. **Install dependencies:**
+   ```bash
+   pnpm install
+   # or
+   npm install
+   # or
+   yarn install
+   ```
+2. **Run the development server:**
+   ```bash
+   pnpm dev
+   # or
+   npm run dev
+   # or
+   yarn dev
+   ```
+3. Open [http://localhost:3000](http://localhost:3000) to see the result.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Project Structure
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- `/app` – App Router pages (Home, Work, Playground, dynamic case-study)
+- `/components` – UI, layout, cards, and playground components
+- `/content/work` – MDX files for case studies
+- `/public/images` – Thumbnails & assets
+- `/lib` – Utilities (e.g., MDX helpers, dummy data)
+- `/styles` – Global styles (Tailwind, custom CSS)
+- `/project-doc` – PRD, tasks, instructions, changelog
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Adding Work (Case Study) MDX Files
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Add a new `.mdx` file to `/content/work/` (see `awesome-project.mdx` for structure).
+2. Include frontmatter (title, year, company, etc.) and rich content (text, images, video, custom components).
+3. Images should be placed in `/public/images/` and referenced with a relative path.
 
-## Learn More
+## Adding Playground Cards
 
-To learn more about Next.js, take a look at the following resources:
+1. Create a new React component in `/components/playground/` for your interactive or image demo card.
+2. Import and use it in the Playground grid (`/app/playground/page.tsx`).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- See `CONTRIBUTING.md` for code style and commit guidelines.
+- See `DESIGN.md` for Figma links, motion specs, and palette.
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Deploy on [Vercel](https://vercel.com/) for best performance and edge functions support.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+For more details, see the documentation in `/project-doc` and `/docs` folders.
