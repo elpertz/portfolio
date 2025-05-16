@@ -2,40 +2,68 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChevronRightIcon } from "lucide-react";
 import ProjectCard from "@/components/ui/project-card";
-import { projects, Project } from "@/lib/dummy-data/projects";
+import { getCaseStudySlugs } from "@/lib/utils";
+
+// Tipo para los case studies
+interface CaseStudy {
+  slug: string;
+  title: string;
+  year: string;
+  company: string;
+  mainImage: string;
+}
 
 export default function Home() {
-  // State to track hovered project
-  const [hoveredProject, setHoveredProject] = useState<Project | null>(null);
   // Estado para la pestaña activa
-  const [activeTab, setActiveTab] = useState("about");
+  const [activeTab, setActiveTab] = useState("work");
+  // Estado para almacenar los case studies
+  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
+  // Estado para el proyecto sobre el que pasa el mouse
+  const [hoveredProject, setHoveredProject] = useState<CaseStudy | null>(null);
+
+  // Cargar los case studies cuando el componente se monta
+  useEffect(() => {
+    const loadCaseStudies = async () => {
+      try {
+        // Fetch case studies
+        const response = await fetch("/api/case-studies");
+        const data = await response.json();
+        setCaseStudies(data.caseStudies || []);
+      } catch (error) {
+        console.error("Error cargando case studies:", error);
+      }
+    };
+
+    loadCaseStudies();
+  }, []);
 
   // Contenido de cada tab
   const renderTabContent = () => {
     switch (activeTab) {
       case "work":
         return (
-          <div className="transition-all duration-500 ease-in-out transform translate-x-0 opacity-100  ">
+          <div className="transition-all duration-500 ease-in-out transform translate-x-0 opacity-100">
             <div className="px-5 space-y-8">
               <h2 className="text-sm text-muted-foreground">Latest projects</h2>
               <div className="flex flex-col gap-2 -mx-2">
-                {projects.map((project) => (
+                {caseStudies.map((project, index) => (
                   <ProjectCard
-                    key={project.id}
-                    id={project.id}
+                    key={project.slug}
+                    id={index + 1}
                     title={project.title}
                     year={project.year}
                     company={project.company}
-                    image={project.image}
+                    image={project.mainImage}
                     onHover={() => setHoveredProject(project)}
                     onLeave={() => setHoveredProject(null)}
                     variant="row"
-                    showImage={hoveredProject?.id === project.id}
+                    showImage={hoveredProject?.slug === project.slug}
                     headingLevel="h3"
+                    href={`/work/${project.slug}`}
                   />
                 ))}
               </div>
@@ -154,7 +182,7 @@ export default function Home() {
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             {hoveredProject && (
               <Image
-                src={hoveredProject.image}
+                src={hoveredProject.mainImage}
                 alt={`${hoveredProject.title} preview`}
                 width={800}
                 height={800}

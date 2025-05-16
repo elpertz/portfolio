@@ -4,25 +4,36 @@
 
 - [ ] Implement hero section
 - [ ] Add "About-me" tab/section
-- [ ] Display latest Work cards (limit to 3-4)
-- [ ] Add CTA button to Reach Out/contact page
+- [x] Display latest Work cards (limit to 3-4) - Implementado con datos reales del MDX
+- [x] Add CTA button to Reach Out (as a tab, not a separate page)
 - [ ] Integrate dark-mode toggle
 - [ ] Add Framer Motion page transitions
-- [ ]Implement mobile responsive design
+- [ ] Implement mobile responsive design
 
 ## 2. Work Page
 
-- [ ] Build grid layout for all projects
+- [x] Build grid layout for all projects
 - [ ] Implement filter functionality (by tag/category)
 - [ ] Implement search functionality
-- [ ] Create WorkCard component
-- [ ] Link each card to dynamic case-study page ([slug])
+- [x] Create WorkCard component
+- [x] Link each card to dynamic case-study page ([slug])
 
-## 3. Case Study Pages
+## 3. Case Study Pages & MDX
 
-- [ ] Set up dynamic routing for /work/[slug]
-- [ ] Render MDX content for each case study
-- [ ] Support images, video, and custom React components in MDX
+- [x] Configure Next.js for MDX support (@next/mdx, pageExtensions, mdx-components.tsx)
+- [x] Create first case study as MDX file (`content/work/`)
+- [x] Create `CaseImage` component for basic image rendering in MDX
+- [x] Set up dynamic routing and page for individual case studies (`/work/[slug]/page.tsx`)
+- [x] Implement MDX content fetching and rendering on the case study page
+- [x] Create `RoleSteps` component to display project roles (discovery, concept, etc.)
+- [x] Create `ImageGallery` / `SecondaryImageCard` component for secondary images
+- [x] Add "Other projects" section showing related case studies
+- [x] Implement layout siguiendo diseño de Figma para case studies
+- [ ] Create component for team members visualization
+- [ ] Create component for video embedding in MDX
+- [ ] Support video components in MDX
+- [ ] Create more image card variations for different needs
+- [ ] Fine-tune visual details to match Figma design
 - [ ] Add navigation back to Work grid
 
 ## 4. Playground Page
@@ -31,26 +42,30 @@
 - [ ] Create PlaygroundCard component
 - [ ] Add at least 3 interactive/image demo cards as React components
 
-## 5. Contact (Reach Out) Page
-
-- [ ] Build contact form UI (name, email, message)
-- [ ] Implement POST to /api/contact endpoint
-- [ ] Show success/error feedback to user
-- [ ] Add basic rate-limiting to API route
-
-## 6. Global/Site-wide
+## 5. Global/Site-wide
 
 - [ ] Set up Tailwind CSS v4
-- [ ] Integrate shadcn/ui components
+- [x] Integrate shadcn/ui components (found some already)
 - [ ] Add Framer Motion for page transitions
 - [ ] Persist theme preference with next-themes
-- [ ] Optimize images (Next <Image> static imports)
+- [x] Optimize images (Next `<Image>` static imports, used in `CaseImage`)
 - [ ] Add ESLint and Prettier config
 - [ ] Ensure accessibility (a11y) best practices
 - [ ] Prepare for Vercel deployment
+- [ ] Add navigation bar with consistent style
+- [ ] Add footer component
+- [ ] Port foundation styles (colors, typography) from Figma to globals.css
 
-## 7. Documentation
+## 6. Documentation
 
-- [ ] Write README.md (setup, adding Work/Playground items)
+- [x] Write README.md (setup, adding Work/Playground items)
 - [ ] Write CONTRIBUTING.md (code style, commit guidelines)
 - [ ] Write DESIGN.md (Figma, motion specs, palette)
+
+## 7. Responsive & Animations
+
+- [ ] Implement responsive design for Home page
+- [ ] Implement responsive design for Work page
+- [ ] Implement responsive design for Case Study pages
+- [ ] Add page transitions and animations
+- [ ] Add micro-interactions and hover states

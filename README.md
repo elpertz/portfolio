@@ -30,17 +30,61 @@ Showcase detailed work case-studies, display playful experiments in a Playground
 
 - `/app` – App Router pages (Home, Work, Playground, dynamic case-study)
 - `/components` – UI, layout, cards, and playground components
+  - `/components/mdx` – Custom MDX components for case studies (CaseImage, RoleSteps, ImageGallery)
 - `/content/work` – MDX files for case studies
 - `/public/images` – Thumbnails & assets
-- `/lib` – Utilities (e.g., MDX helpers, dummy data)
-- `/styles` – Global styles (Tailwind, custom CSS)
+- `/lib` – Utilities (e.g., MDX helpers, API functions)
+  - `/lib/mdx.ts` – Functions for processing MDX content
+- `/api` – API routes for data fetching
 - `/project-doc` – PRD, tasks, instructions, changelog
 
 ## Adding Work (Case Study) MDX Files
 
-1. Add a new `.mdx` file to `/content/work/` (see `awesome-project.mdx` for structure).
-2. Include frontmatter (title, year, company, etc.) and rich content (text, images, video, custom components).
-3. Images should be placed in `/public/images/` and referenced with a relative path.
+1. Add a new `.mdx` file to `/content/work/` (see existing files for structure).
+2. Include frontmatter with:
+   ```mdx
+   ---
+   title: "Your Case Study Title"
+   year: "YYYY"
+   company: "Company Name"
+   team:
+     - Your Name (Designer)
+     - Team Member 1
+     - Team Member 2
+   roles:
+     - step: discovery
+       participated: true
+     - step: concept
+       participated: true
+     - step: define
+       participated: true
+     - step: design
+       participated: true
+   mainImage: "/images/your-main-image.png"
+   secondaryImages:
+     - "/images/secondary-image-1.png"
+     - "/images/secondary-image-2.png"
+   ---
+   ```
+3. Add content using Markdown syntax and custom components:
+
+   ```mdx
+   import CaseImage from "../../components/mdx/CaseImage";
+
+   # Your Title Here
+
+   <CaseImage src="/images/your-image.png" alt="Description" />
+
+   ## Problem Summary
+
+   Your problem description here...
+   ```
+
+## Available MDX Components
+
+- `<CaseImage src="/path/to/image.png" alt="Alt text" />` - Displays an image with proper styling
+- `<RoleSteps roles={frontmatter.roles} />` - Visualizes project role steps with participation indicators
+- `<ImageGallery images={frontmatter.secondaryImages} />` - Displays a grid of secondary images
 
 ## Adding Playground Cards
 
