@@ -1,7 +1,8 @@
 // Notes: Componente para mostrar los pasos/roles del proyecto en case studies MDX.
-// Goal: Visualizar los 4 pasos (discovery, concept, define, design) como círculos conectados por una línea.
+// Goal: Visualizar los pasos del proyecto como círculos conectados por una línea punteada, usando el nuevo componente Role con auto-alignment.
 
 import React from "react";
+import { Role } from "@/components/ui";
 
 export interface RoleStep {
   step: string;
@@ -10,38 +11,82 @@ export interface RoleStep {
 
 interface RoleStepsProps {
   roles: RoleStep[];
+  /** Whether to show the legend explaining the colors */
+  showLegend?: boolean;
+  /** Custom steps to use instead of default ones. If not provided, uses roles as-is */
+  customSteps?: string[];
   className?: string;
 }
 
-const RoleSteps: React.FC<RoleStepsProps> = ({ roles, className = "" }) => {
-  const steps = ["discovery", "concept", "define", "design"];
+/**
+ * RoleSteps component for displaying project process steps
+ * Shows connected roles with participation status for case studies
+ * Automatically handles alignment: first=start, middle=center, last=end
+ */
+const RoleSteps: React.FC<RoleStepsProps> = ({
+  roles,
+  showLegend = true,
+  customSteps,
+  className = "",
+}) => {
+  // Use custom steps if provided, otherwise use the roles as they come
+  const stepsToShow = customSteps
+    ? customSteps.map((step) => {
+        const found = roles.find(
+          (role) => role.step.toLowerCase() === step.toLowerCase()
+        );
+        return {
+          step,
+          participated: found ? found.participated : false,
+        };
+      })
+    : roles;
 
-  // Normalizar los roles para asegurar que todos los pasos están representados
-  const normalizedRoles = steps.map((step) => {
-    const found = roles.find((role) => role.step === step);
-    return {
-      step,
-      participated: found ? found.participated : false,
-    };
-  });
+  // Handle single step case
+  if (stepsToShow.length === 1) {
+    return (
+      <div className={`my-8 ${className}`}>
+        <div className="flex justify-center">
+          <Role
+            key={stepsToShow[0].step}
+            label={stepsToShow[0].step}
+            participated={stepsToShow[0].participated}
+            position="middle"
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`my-8 ${className}`}>
-      <div className="relative flex justify-between items-center pt-8 pb-4">
-        {/* Línea de conexión */}
-        <div className="absolute top-1/2 left-0 w-full h-[2px] bg-gray-200"></div>
+      {/* Container for the connected steps */}
+      <div className="relative">
+        {/* Dashed connection line - purple style from Figma */}
+        {/* Líneas conectando los círculos */}
+        {stepsToShow.length > 1 && (
+          <div className="absolute inset-x-[35px] top-[17px] h-px bg-[repeating-linear-gradient(to_right,_#d1d5db_0_8px,_transparent_8px_16px)]" />
+        )}
 
-        {/* Círculos para cada paso */}
-        {normalizedRoles.map((role, index) => (
-          <div key={role.step} className="flex flex-col items-center z-10">
-            <div
-              className={`w-4 h-4 rounded-full mb-6 ${
-                role.participated ? "bg-orange-500" : "bg-gray-300"
-              }`}
-            />
-            <span className="text-sm capitalize">{role.step}</span>
-          </div>
-        ))}
+        {/* Steps container */}
+        <div className="relative flex justify-between items-start z-10">
+          {stepsToShow.map((role, index) => {
+            // Automatically determine position
+            let position: "first" | "middle" | "last" = "middle";
+            if (index === 0) position = "first";
+            else if (index === stepsToShow.length - 1) position = "last";
+
+            return (
+              <Role
+                key={`${role.step}-${index}`}
+                label={role.step}
+                participated={role.participated}
+                position={position}
+                className=""
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );

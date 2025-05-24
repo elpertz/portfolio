@@ -9,13 +9,13 @@ import { getCaseStudyBySlug, getAllCaseStudies } from "@/lib/mdx";
 import RoleSteps from "@/components/mdx/RoleSteps";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export default async function CaseStudyPage({ params }: PageProps) {
-  const { slug } = params;
+  const { slug } = await params;
   const caseStudy = await getCaseStudyBySlug(slug);
 
   if (!caseStudy) {
@@ -31,151 +31,98 @@ export default async function CaseStudyPage({ params }: PageProps) {
     .slice(0, 2); // Mostrar solo 2 proyectos
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      {/* Header */}
-      <header className="mb-8">
-        <div className="flex items-center text-sm font-light mb-2">
+    <>
+      <nav>
+        <div className="flex items-center text-sm font-light  container mx-auto px-4 max-w-xl py-2">
           <Link href="/" className="hover:underline">
             pertz home
           </Link>
           <span className="mx-2">•</span>
           <button className="hover:underline">Menu</button>
         </div>
-      </header>
-
-      {/* Título y detalles del proyecto */}
-      <div className="mb-10">
-        <h1 className="text-3xl font-semibold mb-2">{frontmatter.title}</h1>
-        <div className="flex items-center gap-6 text-sm text-muted-foreground mb-4">
-          <div className="flex items-center gap-1">
-            <span className="text-gray-500">Company:</span>
-            <span>{frontmatter.company}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="text-gray-500">Year:</span>
-            <span>{frontmatter.year}</span>
-          </div>
-        </div>
-
-        {/* Resumen del problema */}
-        <p className="text-gray-700 max-w-2xl mb-8">
-          Merchants were confused about when and how much they were being paid,
-          leading to constant calls to CX and negative brand perception.
-        </p>
-
-        {/* Imagen principal */}
-        <div className="mb-12">
-          <Image
-            src={frontmatter.mainImage}
-            alt={frontmatter.title}
-            width={1000}
-            height={600}
-            className="w-full rounded-lg shadow-md object-cover"
-            priority
-          />
-        </div>
-      </div>
-
-      {/* Background */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold mb-4">Background</h2>
-        <p className="text-gray-700 mb-8">
-          Merchants were confused about when and how much they were being paid,
-          leading to constant calls to CX and negative brand perception.
-          Merchants were confused about when and how much they were being paid,
-          leading to constant calls to CX and negative brand perception.
-        </p>
-
-        {/* Imágenes secundarias en una fila */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {frontmatter.secondaryImages.slice(0, 2).map((image, idx) => (
-            <div key={`img-${idx}`} className="rounded-lg overflow-hidden">
-              <Image
-                src={image}
-                alt={`${frontmatter.title} - secondary image ${idx + 1}`}
-                width={500}
-                height={300}
-                className="w-full object-cover"
-              />
+      </nav>
+      {/* Header */}
+      <header>
+        <div className="flex flex-col  bg-[#F7F8F5] py-4 mx-auto max-w-[90%] md:max-w-[calc(100%-8.75rem)] h-[calc(100dvh-3rem)] md:h-[calc(95dvh-3rem)] rounded-3xl shadow-[var(--frame-shadow)] overflow-hidden">
+          <div className="container mx-auto px-4 pt-8 max-w-xl">
+            {/* Título y detalles del proyecto */}
+            <div className="mb-4">
+              <h1 className="text-2xl tracking-tight font-semibold mb-2">
+                {frontmatter.title}
+              </h1>
+              <div className="flex items-center gap-4  mb-4">
+                <div className="flex flex-col items-start ">
+                  <span className="text-muted-foreground text-sm">
+                    Company:
+                  </span>
+                  <span>{frontmatter.company}</span>
+                </div>
+                <div className="flex flex-col items-start ">
+                  <span className="text-muted-foreground text-sm">Year:</span>
+                  <span>{frontmatter.year}</span>
+                </div>
+              </div>
+              <p className=" text-muted-foreground  text-pretty">
+                {frontmatter.description}
+              </p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* My Role */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold mb-4">My Role</h2>
-
-        {/* Visualización de roles como en el Figma */}
-        <RoleSteps roles={frontmatter.roles} />
-
-        {/* Lista de responsabilidades */}
-        <ul className="list-disc list-inside space-y-2 text-gray-700 my-8">
-          {frontmatter.team.slice(0, 1).map((role, idx) => (
-            <li key={`role-${idx}`}>{role}</li>
-          ))}
-          <li>Work with the PM to define the problem and propose solutions.</li>
-          <li>
-            Interview key users (accountants, business owners, marketing
-            managers, finance teams) to understand their reporting needs.
-          </li>
-          <li>
-            Redesign the information architecture and refresh the look based on
-            the new design system.
-          </li>
-        </ul>
-
-        {/* Otra imagen del proyecto */}
-        {frontmatter.secondaryImages.length > 2 && (
-          <div className="mb-8">
+          </div>
+          {/* Imagen principal */}
+          <div className="max-w-3xl mx-auto scale-98 translate-y-4 hover:translate-y-0 hover:scale-100 transition-all duration-300 ease-out">
             <Image
-              src={frontmatter.secondaryImages[2]}
-              alt={`${frontmatter.title} - additional view`}
+              src={frontmatter.mainImage}
+              alt={frontmatter.title}
               width={1000}
               height={600}
-              className="w-full rounded-lg shadow-md object-cover"
+              className="w-full rounded-lg shadow-md object-cover aspect-video"
+              priority
             />
           </div>
-        )}
-      </section>
+        </div>
+      </header>
+      <main>
+        <div className="container mx-auto px-4 py-8 max-w-xl text-muted-foreground space-y-8">
+          {/* Contenido MDX dinámico */}
+          <div className="prose prose-lg max-w-none ">
+            <div className=" [&>h2]:text-lg [&>h2]:text-foreground [&>h2]:font-semibold [&>h2]:mb-2 [&>h2]:mt-16 [&>h2:first-of-type]:mt-0  [&>p]:mb-4 [&>ul]:list-disc [&>ul]:list-inside [&>ul]:space-y-2 [&>ul]:text-gray-700 [&>ul]:my-6 [&>li]:leading-relaxed">
+              {content}
+            </div>
+          </div>
 
-      {/* Key Metrics */}
-      <section className="mb-16">
-        <h2 className="text-2xl font-semibold mb-4">Key metrics</h2>
-        <ul className="list-disc list-inside space-y-2 text-gray-700">
-          <li>Significant drop in report-related calls</li>
-          <li>Merchant NPS increased from 68 to 75.</li>
-          <li>Higher adoption and satisfaction with daily payouts.</li>
-        </ul>
-      </section>
-
-      {/* Other Projects */}
+          {/* Other Projects */}
+        </div>
+      </main>
       <section className="mb-10">
-        <h2 className="text-2xl font-semibold mb-6">Other projects</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {otherProjects.map((project) => (
-            <Link
-              key={project.slug}
-              href={`/work/${project.slug}`}
-              className="group block"
-            >
-              <div className="rounded-lg overflow-hidden mb-3">
-                <Image
-                  src={project.mainImage}
-                  alt={project.title}
-                  width={500}
-                  height={300}
-                  className="w-full object-cover transition-all group-hover:scale-105"
-                />
-              </div>
-              <h3 className="font-medium text-lg mb-1">{project.title}</h3>
-              <div className="text-sm text-gray-500">
-                {project.year} — {project.company}
-              </div>
-            </Link>
-          ))}
+        <div className="container mx-auto px-4 py-8 max-w-3xl text-muted-foreground space-y-8">
+          <div className="bg-[repeating-linear-gradient(black,black_4px,transparent_4px,transparent_8px)] opacity-10 h-px w-full "></div>
+          <h2 className="text-lg font-semibold mb-4 text-foreground">
+            Other projects
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {otherProjects.map((project) => (
+              <Link
+                key={project.slug}
+                href={`/work/${project.slug}`}
+                className="group block"
+              >
+                <div className="rounded-lg overflow-hidden mb-3">
+                  <Image
+                    src={project.mainImage}
+                    alt={project.title}
+                    width={500}
+                    height={300}
+                    className="w-full object-cover transition-all group-hover:scale-105"
+                  />
+                </div>
+                <h3 className="font-medium text-lg mb-1">{project.title}</h3>
+                <div className="text-sm text-gray-500">
+                  {project.year} — {project.company}
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
-    </div>
+    </>
   );
 }
