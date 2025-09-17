@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pertz Portfolio
+
+Personal portfolio built with **Next.js 15 (App Router)**, **Tailwind CSS v4**, **Framer Motion**, **MDX**, and **shadcn/ui**.
+
+## Project Overview
+
+Showcase detailed work case-studies, display playful experiments in a Playground grid, and offer a simple contact path (via Home tab).
 
 ## Getting Started
 
-First, run the development server:
+1. **Install dependencies:**
+   ```bash
+   pnpm install
+   # or
+   npm install
+   # or
+   yarn install
+   ```
+2. **Run the development server:**
+   ```bash
+   pnpm dev
+   # or
+   npm run dev
+   # or
+   yarn dev
+   ```
+3. Open [http://localhost:3000](http://localhost:3000) to see the result.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Project Structure
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- `/app` – App Router pages (Home, Work, Playground, dynamic case-study)
+- `/components` – UI, layout, cards, and playground components
+  - `/components/mdx` – Custom MDX components for case studies (CaseImage, RoleSteps, ImageGallery)
+- `/content/work` – MDX files for case studies
+- `/public/images` – Thumbnails & assets
+- `/lib` – Utilities (e.g., MDX helpers, API functions)
+  - `/lib/mdx.ts` – Functions for processing MDX content
+- `/api` – API routes for data fetching
+- `/project-doc` – PRD, tasks, instructions, changelog
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Adding Work (Case Study) MDX Files
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Add a new `.mdx` file to `/content/work/` (see existing files for structure).
+2. Include frontmatter with:
+   ```mdx
+   ---
+   title: "Your Case Study Title"
+   year: "YYYY"
+   company: "Company Name"
+   team:
+     - Your Name (Designer)
+     - Team Member 1
+     - Team Member 2
+   roles:
+     - step: discovery
+       participated: true
+     - step: concept
+       participated: true
+     - step: define
+       participated: true
+     - step: design
+       participated: true
+   mainImage: "/images/your-main-image.png"
+   secondaryImages:
+     - "/images/secondary-image-1.png"
+     - "/images/secondary-image-2.png"
+   ---
+   ```
+3. Add content using Markdown syntax and custom components:
 
-## Learn More
+   ```mdx
+   import CaseImage from "../../components/mdx/CaseImage";
 
-To learn more about Next.js, take a look at the following resources:
+   # Your Title Here
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   <CaseImage src="/images/your-image.png" alt="Description" />
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ## Problem Summary
 
-## Deploy on Vercel
+   Your problem description here...
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Available MDX Components
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `<CaseImage src="/path/to/image.png" alt="Alt text" />` - Displays an image with proper styling
+- `<RoleSteps roles={frontmatter.roles} />` - Visualizes project role steps with participation indicators
+- `<ImageGallery images={frontmatter.secondaryImages} />` - Displays a grid of secondary images
+
+## Adding Playground Cards
+
+1. Create a new React component in `/components/playground/` for your interactive or image demo card.
+2. Import and use it in the Playground grid (`/app/playground/page.tsx`).
+
+## Contributing
+
+- See `CONTRIBUTING.md` for code style and commit guidelines.
+- See `DESIGN.md` for Figma links, motion specs, and palette.
+
+## Deployment
+
+- Deploy on [Vercel](https://vercel.com/) for best performance and edge functions support.
+
+---
+
+For more details, see the documentation in `/project-doc` and `/docs` folders.

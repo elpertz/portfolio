@@ -31,7 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={ppmori.className}>
-      <body className="antialiased  selection:bg-neutral-200/80 selection:text-neutral-400">
+      <body className="antialiased bg-[#FDFFFC] selection:bg-neutral-200/80 selection:text-neutral-400 md:text-lg">
         {children}
       </body>
     </html>
